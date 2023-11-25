@@ -2,7 +2,7 @@ using System.Numerics;
 
 class WorldMap
 {
-    public char[,] mapTiles;
+    public CharInfo[,] mapTiles;
     public int MapWidth => mapTiles.GetLength(0);
     private List<GameEntity> entities = new List<GameEntity>();
     private Dictionary<Vector2, GameEntity> entityPositionMap;
@@ -11,7 +11,7 @@ class WorldMap
     {
         entityPositionMap = new Dictionary<Vector2, GameEntity>();
         entities = new List<GameEntity>();
-        mapTiles = new char[mapWidth, mapWidth];
+        mapTiles = new CharInfo[mapWidth, mapWidth];
         GenerateMap();
     }
 
@@ -19,6 +19,7 @@ class WorldMap
     {
         Random Random = new Random();
 
+        CharInfo grass = new CharInfo('.', ConsoleColor.Green);
         for (int x = 0; x < MapWidth; x++)
         {
             for (int y = 0; y < MapWidth; y++)
@@ -29,7 +30,7 @@ class WorldMap
                 // }
                 // else
                 // {
-                mapTiles[x, y] = '.';
+                mapTiles[x, y] = grass;
                 // }
 
                 if (Random.Next(0, 50) == 0)
@@ -61,14 +62,14 @@ class WorldMap
         entityPositionMap[entity.Position] = entity;
     }
 
-    internal char GetSymbolAt(int x, int y)
+    internal CharInfo GetCharInfoAt(int x, int y)
     {
-        char symbol;
+        CharInfo symbol;
         Vector2 position = new Vector2(x, y);
 
         if (entityPositionMap.TryGetValue(position, out GameEntity? entity))
         {
-            symbol = entity.Symbol;
+            symbol = entity.CharInfo;
         }
         else
         {

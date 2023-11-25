@@ -4,7 +4,7 @@ abstract class GameEntity
 {
     public int Id { get; set; }
     public Vector2 Position { get; set; }
-    public char Symbol { get; set; }
+    public CharInfo CharInfo { get; set; }
     public virtual bool IsBlocking { get; set; }
     public virtual bool IsVisible { get; set; }
     public int Health { get; set; }
@@ -31,7 +31,7 @@ class Player : GameEntity, IAttacker, IAttackable
     public Player(int x, int y)
     {
         Position = new Vector2(x, y);
-        Symbol = '@';
+        CharInfo = new CharInfo('@', ConsoleColor.White);
         Health = 10;
         Strength = 1;
     }
@@ -66,7 +66,7 @@ class Enemy : GameEntity, IAttacker, IAttackable
     public Enemy(int x, int y)
     {
         Position = new Vector2(x, y);
-        Symbol = 'E';
+        CharInfo = new CharInfo('E', ConsoleColor.Red);
         Health = 5;
         Strength = 1;
     }
@@ -95,7 +95,7 @@ class Tree : GameEntity
     public Tree(int x, int y)
     {
         Position = new Vector2(x, y);
-        Symbol = 'T';
+        CharInfo = new CharInfo('T', ConsoleColor.Green);
     }
 
     public override void Update()
@@ -111,9 +111,10 @@ class Rock : GameEntity
 
     public Rock(int x, int y)
     {
+        char symbol = (new Random().Next(0, 10) < 8) ? 'o' : 'O';
         Position = new Vector2(x, y);
         //80% change to set symbol to 'o', 20% chance to set symbol to 'O'
-        Symbol = (new Random().Next(0, 10) < 8) ? 'o' : 'O';
+        CharInfo = new CharInfo(symbol, ConsoleColor.Gray);
     }
 
     public override void Update()

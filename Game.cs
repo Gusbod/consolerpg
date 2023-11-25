@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using System.Numerics;
 using System.Text;
 
@@ -63,50 +62,83 @@ class Game
         }
     }
 
+    // public void Draw()
+    // {
+    //     StringBuilder stringBuilder = new StringBuilder();
+    //     ConsoleColor lastColor = Console.ForegroundColor;
+
+    //     for (int y = 0; y < viewHeight; y++)
+    //     {
+    //         for (int x = 0; x < viewWidth; x++)
+    //         {
+    //             int worldX = (int)(player.Position.X - viewWidth / 2 + x);
+    //             int worldY = (int)(player.Position.Y - viewHeight / 2 + y);
+
+    //             CharInfo charInfo = worldMap.GetCharInfoAt(worldX, worldY);
+
+    //             if (player.Position.X == worldX && player.Position.Y == worldY)
+    //             {
+    //                 charInfo = player.CharInfo;
+    //             }
+
+    //             if (charInfo.Color != lastColor)
+    //             {
+    //                 if (stringBuilder.Length > 0)
+    //                 {
+    //                     Console.Write(stringBuilder.ToString());
+    //                     stringBuilder.Clear();
+    //                 }
+    //                 Console.ForegroundColor = charInfo.Color;
+    //                 lastColor = charInfo.Color;
+    //             }
+
+    //             stringBuilder.Append(charInfo.Symbol);
+    //         }
+    //         stringBuilder.AppendLine();
+    //     }
+
+    //     Console.SetCursorPosition(0, 0);
+    //     Console.Write(stringBuilder.ToString());
+    //     Console.ForegroundColor = ConsoleColor.White; // Reset to default color
+    // }
+
     public void Draw()
     {
-        int halfViewWidth = viewWidth / 2;
-        int halfViewHeight = viewHeight / 2;
-
-        // Calculate the top-left position of the visible area
-        float startX = Math.Max(0, player.Position.X - halfViewWidth);
-        float startY = Math.Max(0, player.Position.Y - halfViewHeight);
-
-        // Adjust start positions to avoid going beyond map boundaries
-        startX = Math.Min(startX, worldMap.MapWidth - viewWidth);
-        startY = Math.Min(startY, worldMap.MapWidth - viewHeight);
-
         StringBuilder stringBuilder = new StringBuilder();
+        ConsoleColor lastColor = Console.ForegroundColor;
 
         for (int y = 0; y < viewHeight; y++)
         {
             for (int x = 0; x < viewWidth; x++)
             {
-                int worldX = (int)startX + x;
-                int worldY = (int)startY + y;
+                int worldX = (int)(player.Position.X - viewWidth / 2 + x);
+                int worldY = (int)(player.Position.Y - viewHeight / 2 + y);
 
-                char symbol = worldMap.GetSymbolAt(worldX, worldY);
+                CharInfo charInfo = worldMap.GetCharInfoAt(worldX, worldY);
 
                 if (player.Position.X == worldX && player.Position.Y == worldY)
                 {
-                    symbol = player.Symbol;
+                    charInfo = player.CharInfo; // Assuming Player has a CharInfo property
                 }
 
-                buffer[y, x] = symbol;
-            }
-        }
+                if (charInfo.Color != lastColor)
+                {
+                    Console.Write(stringBuilder.ToString());
+                    stringBuilder.Clear();
+                    Console.ForegroundColor = charInfo.Color;
+                    lastColor = charInfo.Color;
+                }
 
-        for (int y = 0; y < viewHeight; y++)
-        {
-            for (int x = 0; x < viewWidth; x++)
-            {
-                stringBuilder.Append(buffer[y, x]);
+                stringBuilder.Append(charInfo.Symbol);
             }
             stringBuilder.AppendLine();
         }
 
-        Console.SetCursorPosition(0, 0);
+        // Write any remaining content in the stringBuilder to the console
         Console.Write(stringBuilder.ToString());
+
+        Console.SetCursorPosition(0, 0);
+        Console.ForegroundColor = ConsoleColor.White; // Reset to default color
     }
 
 }
