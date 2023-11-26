@@ -1,19 +1,40 @@
 class MessageLog
 {
-    private Queue<string> messages = new Queue<string>();
+    private class MessageEntry
+    {
+        public string Message { get; set; } = "";
+        public int UpdateCounter { get; set; }
+    }
+
+    public int Lines { get; private set; }
+    private readonly List<MessageEntry> messageEntries = new();
+    private int counter = 0;
+    private int messageLifetime = 10;
+
+    public MessageLog(int lines = 6)
+    {
+        Lines = lines;
+    }
+
+    public void Update()
+    {
+        counter++;
+    }
 
     public void AddMessage(string message)
     {
-        messages.Enqueue(message);
-
-        if (messages.Count > 1) // Limit the number of messages stored
+        var splitMessage = message.Split('\n');
+        foreach (var line in splitMessage)
         {
-            messages.Dequeue();
+            messageEntries.Add(new MessageEntry { Message = line, UpdateCounter = counter });
         }
     }
 
-    public IEnumerable<string> GetMessages()
+    public IEnumerable<string> GetLastMessages()
     {
-        return messages;
+        return messageEntries
+            .Where(entry => counter - entry.UpdateCounter <= messageLifetime)
+            .Select(entry => entry.Message)
+            .TakeLast(Lines).Reverse();
     }
 }

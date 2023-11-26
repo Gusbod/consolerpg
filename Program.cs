@@ -1,5 +1,5 @@
-﻿Console.Clear();
-Console.CursorVisible = false;
+﻿MessageLog logger = new MessageLog();
+World world = new World(1024, logger);
+Game game = new Game(world, logger);
 
-Game game = new Game();
 game.Run();

@@ -5,7 +5,7 @@ class Player : GameEntity, IAttacker, IAttackable
     public int XP { get; set; }
     public int Level => XP / 10 + 1;
 
-    public Player(int x, int y)
+    public Player(int x, int y, IWorldInteraction world) : base(world)
     {
         Name = "Alf";
         Position = new Vector2(x, y);
@@ -22,18 +22,18 @@ class Player : GameEntity, IAttacker, IAttackable
         {
             string result = target.OnAttacked(Strength);
             XP += 1;
-            return "Attacked with " + Strength + " damage. " + result;
+            return "You attack: " + Strength + " damage. " + result;
         }
         else
         {
-            return "Missed!";
+            return "You missed!";
         }
     }
 
     public string OnAttacked(int damage)
     {
         Health -= damage;
-        return "Player health: " + Health;
+        return "";
     }
 
     public void Move(int x, int y)
