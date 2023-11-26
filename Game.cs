@@ -3,20 +3,11 @@ using System.Text;
 
 class Game
 {
-    readonly WorldMap worldMap;
-    readonly Player player;
-
+    readonly WorldMap worldMap = new(2048);
+    readonly Player player = new(1024, 1024);
+    readonly MessageLog MessageLog = new();
     readonly int viewWidth = 40;
     readonly int viewHeight = 20;
-
-    private char[,] buffer;
-
-    public Game()
-    {
-        buffer = new char[viewHeight, viewWidth];
-        player = new Player(1024, 1024);
-        worldMap = new WorldMap(2048);
-    }
 
     public void Run()
     {
@@ -55,52 +46,21 @@ class Game
 
     private void MovePlayer(int x, int y)
     {
-        //Check if the player can move to the new position
-        if (worldMap.CanMoveTo(player.Position + new Vector2(x, y)))
+        Vector2 newPosition = player.Position + new Vector2(x, y);
+        if (worldMap.CanMoveTo(newPosition))
         {
             player.Move(x, y);
         }
+        else
+        {
+            GameEntity? entity = worldMap.GetEntityAt(newPosition);
+            OnCollisionResult? result = entity?.OnCollision(player);
+            if (result?.Message != null)
+            {
+                MessageLog.AddMessage(result.Message);
+            }
+        }
     }
-
-    // public void Draw()
-    // {
-    //     StringBuilder stringBuilder = new StringBuilder();
-    //     ConsoleColor lastColor = Console.ForegroundColor;
-
-    //     for (int y = 0; y < viewHeight; y++)
-    //     {
-    //         for (int x = 0; x < viewWidth; x++)
-    //         {
-    //             int worldX = (int)(player.Position.X - viewWidth / 2 + x);
-    //             int worldY = (int)(player.Position.Y - viewHeight / 2 + y);
-
-    //             CharInfo charInfo = worldMap.GetCharInfoAt(worldX, worldY);
-
-    //             if (player.Position.X == worldX && player.Position.Y == worldY)
-    //             {
-    //                 charInfo = player.CharInfo;
-    //             }
-
-    //             if (charInfo.Color != lastColor)
-    //             {
-    //                 if (stringBuilder.Length > 0)
-    //                 {
-    //                     Console.Write(stringBuilder.ToString());
-    //                     stringBuilder.Clear();
-    //                 }
-    //                 Console.ForegroundColor = charInfo.Color;
-    //                 lastColor = charInfo.Color;
-    //             }
-
-    //             stringBuilder.Append(charInfo.Symbol);
-    //         }
-    //         stringBuilder.AppendLine();
-    //     }
-
-    //     Console.SetCursorPosition(0, 0);
-    //     Console.Write(stringBuilder.ToString());
-    //     Console.ForegroundColor = ConsoleColor.White; // Reset to default color
-    // }
 
     public void Draw()
     {
@@ -118,7 +78,7 @@ class Game
 
                 if (player.Position.X == worldX && player.Position.Y == worldY)
                 {
-                    charInfo = player.CharInfo; // Assuming Player has a CharInfo property
+                    charInfo = player.CharInfo;
                 }
 
                 if (charInfo.Color != lastColor)
@@ -137,8 +97,13 @@ class Game
         // Write any remaining content in the stringBuilder to the console
         Console.Write(stringBuilder.ToString());
 
-        Console.SetCursorPosition(0, 0);
-        Console.ForegroundColor = ConsoleColor.White; // Reset to default color
-    }
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        foreach (var message in MessageLog.GetMessages())
+        {
+            Console.WriteLine(message);
+        }
 
+        Console.ForegroundColor = ConsoleColor.White; // Reset to default color
+        Console.SetCursorPosition(0, 0);
+    }
 }

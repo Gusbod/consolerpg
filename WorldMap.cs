@@ -3,7 +3,8 @@ using System.Numerics;
 class WorldMap
 {
     public CharInfo[,] mapTiles;
-    public int MapWidth => mapTiles.GetLength(0);
+    public int MapSize => mapTiles.GetLength(0);
+
     private List<GameEntity> entities = new List<GameEntity>();
     private Dictionary<Vector2, GameEntity> entityPositionMap;
 
@@ -20,9 +21,9 @@ class WorldMap
         Random Random = new Random();
 
         CharInfo grass = new CharInfo('.', ConsoleColor.Green);
-        for (int x = 0; x < MapWidth; x++)
+        for (int x = 0; x < MapSize; x++)
         {
-            for (int y = 0; y < MapWidth; y++)
+            for (int y = 0; y < MapSize; y++)
             {
                 // if (Random.Next(0, 10) == 0)
                 // {
@@ -62,25 +63,28 @@ class WorldMap
         entityPositionMap[entity.Position] = entity;
     }
 
-    internal CharInfo GetCharInfoAt(int x, int y)
+    public CharInfo GetCharInfoAt(int x, int y)
     {
-        CharInfo symbol;
+        if (x < 0 || x >= MapSize || y < 0 || y >= MapSize)
+        {
+            return new CharInfo(' ', ConsoleColor.Black); // Empty space
+        }
+
         Vector2 position = new Vector2(x, y);
 
         if (entityPositionMap.TryGetValue(position, out GameEntity? entity))
         {
-            symbol = entity.CharInfo;
+            return entity.CharInfo;
         }
         else
         {
-            symbol = mapTiles[x, y];
+            return mapTiles[x, y];
         }
-        return symbol;
     }
 
-    internal bool CanMoveTo(Vector2 vector2)
+    public bool CanMoveTo(Vector2 vector2)
     {
-        if (vector2.X < 0 || vector2.X >= MapWidth || vector2.Y < 0 || vector2.Y >= MapWidth)
+        if (vector2.X < 0 || vector2.X >= MapSize || vector2.Y < 0 || vector2.Y >= MapSize)
         {
             return false;
         }
@@ -92,4 +96,11 @@ class WorldMap
 
         return true;
     }
+
+    public GameEntity? GetEntityAt(Vector2 position)
+    {
+        entityPositionMap.TryGetValue(position, out GameEntity? entity);
+        return entity;
+    }
+
 }
