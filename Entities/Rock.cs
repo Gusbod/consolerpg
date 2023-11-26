@@ -10,46 +10,65 @@ class Rock : GameEntity
 
     public Rock(int x, int y, IWorldInteraction world) : base(world)
     {
-        char symbol = (new Random().Next(0, 10) < 8) ? 'o' : 'O';
         Position = new Vector2(x, y);
-        //80% change to set symbol to 'o', 20% chance to set symbol to 'O'
+        Weight = new Random().Next(25, 5000);
+
+        char symbol;
+
+        if (Weight < 500)
+        {
+            symbol = 'o';
+        }
+        else if (Weight < 2500)
+        {
+            symbol = 'O';
+        }
+        else
+        {
+            symbol = '0';
+        }
+
         CharInfo = new CharInfo(symbol, ConsoleColor.Gray);
     }
 
     public override OnCollisionResult OnCollision(Player player)
     {
-        //check what direction the player is coming from
+        if (player.Strength * 500 < Weight)
+        {
+            return new OnCollisionResult("This rock is too heavy for you to move.");
+        }
+
+        // Calculate the direction from the entity to the player
         Vector2 direction = player.Position - Position;
-        //adust xShift or yShift based on direction
-        if (direction.X > 0)
+
+        // Adjust xShift or yShift based on direction and player's strength
+        if (Math.Abs(direction.X) >= Math.Abs(direction.Y))
         {
-            xShift += player.Strength * 0.1f;
+            // Player is more aligned horizontally with the entity
+            xShift += (direction.X > 0 ? -player.Strength : player.Strength) * 0.1f;
         }
-        else if (direction.X < 0)
+        else
         {
-            xShift -= player.Strength * 0.1f;
-        }
-        else if (direction.Y > 0)
-        {
-            yShift += player.Strength * 0.1f;
-        }
-        else if (direction.Y < 0)
-        {
-            yShift -= player.Strength * 0.1f;
+            // Player is more aligned vertically with the entity
+            yShift += (direction.Y > 0 ? -player.Strength : player.Strength) * 0.1f;
         }
 
-        if (Math.Abs(xShift) > 1)
+        string returnMessage = "You push on the rock and it moves slightly.";
+        // Check if the accumulated shift is enough to move the entity
+        if (Math.Abs(xShift) >= 1)
         {
-            world.TryMoveEntity(this, new Vector2((int)xShift, 0));
-            xShift = 0;
+            bool moved = world.TryMoveEntity(this, Position + new Vector2(Math.Sign(xShift), 0));
+            xShift %= 1; // Keep the fractional part of the shift
+            returnMessage = moved ? "You push the rock." : "You push on the rock but something is preventing it to move.";
+        }
+        if (Math.Abs(yShift) >= 1)
+        {
+            bool moved = world.TryMoveEntity(this, Position + new Vector2(0, Math.Sign(yShift)));
+            yShift %= 1; // Keep the fractional part of the shift
+            returnMessage = moved ? "You push the rock." : "You push on the rock but something is preventing it to move.";
         }
 
-        if (Math.Abs(yShift) > 1)
-        {
-            world.TryMoveEntity(this, new Vector2(0, (int)yShift));
-            yShift = 0;
-        }
-
-        return new OnCollisionResult($"xShift: {xShift}. yShift: {yShift}.");
+        return new OnCollisionResult(returnMessage);
     }
+
 }

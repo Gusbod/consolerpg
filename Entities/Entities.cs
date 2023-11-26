@@ -11,6 +11,7 @@ abstract class GameEntity
 
     protected IWorldInteraction world;
 
+    public int Weight { get; set; }
     public int Health { get; set; }
     public int MaxHealth { get; }
     public int Strength { get; set; }
