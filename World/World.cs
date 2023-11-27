@@ -2,7 +2,7 @@ using System.Numerics;
 
 interface IWorldInteraction
 {
-    bool CanMoveTo(Vector2 position);
+    // bool CanMoveTo(Vector2 position);
     bool TryMoveEntity(GameEntity entity, Vector2 newPosition);
     GameEntity? GetEntityAt(Vector2 position);
 }
@@ -29,7 +29,6 @@ class World : IWorldInteraction
     {
 
     }
-
 
     public void AddEntity(GameEntity entity)
     {
@@ -69,7 +68,7 @@ class World : IWorldInteraction
         return entity;
     }
 
-    public bool CanMoveTo(Vector2 vector2)
+    private bool CanMoveTo(Vector2 vector2)
     {
         if (vector2.X < 0 || vector2.X >= MapSize || vector2.Y < 0 || vector2.Y >= MapSize)
         {

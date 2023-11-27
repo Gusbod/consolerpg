@@ -4,13 +4,8 @@ class Move : IAction
 {
     public ActionResult Execute(GameEntity actor, Vector2 targetPosition)
     {
-        if (actor.World.CanMoveTo(targetPosition))
+        if (actor.World.TryMoveEntity(actor, targetPosition))
         {
-            bool success = actor.World.TryMoveEntity(actor, targetPosition);
-            if (!success)
-            {
-                return new ActionResult(false, $"You can't move to {targetPosition}.");
-            }
             return new ActionResult(true, "");
         }
         else
