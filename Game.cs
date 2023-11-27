@@ -37,7 +37,7 @@ class Game
         // if (Console.KeyAvailable)
         // {
         var key = Console.ReadKey(true).Key;
-        Move moveAction = new Move();
+        MovePlayer moveAction = new MovePlayer();
         ActionResult? result = null;
         switch (key)
         {

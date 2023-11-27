@@ -2,7 +2,7 @@ using System.Numerics;
 
 interface IWorldInteraction
 {
-    // bool CanMoveTo(Vector2 position);
+    bool CanMoveTo(Vector2 position);
     bool TryMoveEntity(GameEntity entity, Vector2 newPosition);
     GameEntity? GetEntityAt(Vector2 position);
 }
@@ -16,13 +16,11 @@ class World : IWorldInteraction
     readonly List<GameEntity> entities = new();
     readonly Dictionary<Vector2, GameEntity> entityPositionMap = new();
 
-    MessageLog messageLog;
 
-    public World(IWorldGenerator worldGenerator, MessageLog logger)
+    public World(IWorldGenerator worldGenerator)
     {
         Player = new GameEntity(this);
         worldGenerator.PopulateWorld(this);
-        messageLog = logger;
     }
 
     public void Update()
@@ -68,7 +66,7 @@ class World : IWorldInteraction
         return entity;
     }
 
-    private bool CanMoveTo(Vector2 vector2)
+    public bool CanMoveTo(Vector2 vector2)
     {
         if (vector2.X < 0 || vector2.X >= MapSize || vector2.Y < 0 || vector2.Y >= MapSize)
         {
