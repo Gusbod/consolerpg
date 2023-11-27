@@ -5,6 +5,7 @@ interface IWorldInteraction
     bool CanMoveTo(Vector2 position);
     bool TryMoveEntity(GameEntity entity, Vector2 newPosition);
     GameEntity? GetEntityAt(Vector2 position);
+    GameEntity Player { get; }
 }
 
 class World : IWorldInteraction
@@ -25,7 +26,10 @@ class World : IWorldInteraction
 
     public void Update()
     {
-
+        foreach (GameEntity entity in entities)
+        {
+            entity.Update();
+        }
     }
 
     public void AddEntity(GameEntity entity)

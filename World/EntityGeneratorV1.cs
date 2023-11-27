@@ -26,7 +26,7 @@ class EntityGeneratorV1 : IEntityGenerator
             CharInfo = new CharInfo('g', ConsoleColor.Red),
             Position = new Vector2(x, y),
             OnCollideAction = new Attack(),
-            //TODO OnUpdateAction = new MoveTowardsPlayer()
+            OnUpdateAction = new AttackAdjacent()
         };
         entity.SetAttribute("Strength", 1);
         entity.SetAttribute("Dexterity", 1);
