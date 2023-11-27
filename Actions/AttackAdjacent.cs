@@ -23,7 +23,6 @@ class AttackAdjacent : IAction
         foreach (Vector2 direction in directions)
         {
             Vector2 adjacentPosition = actor.Position + direction;
-            // var targetEntity = actor.World.GetEntityAt(adjacentPosition);
 
             if (actor.World.Player.Position == adjacentPosition)
             {
