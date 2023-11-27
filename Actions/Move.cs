@@ -11,7 +11,7 @@ class Move : IAction
             {
                 return new ActionResult(false, $"You can't move to {targetPosition}.");
             }
-            return new ActionResult(true, $"You move to {targetPosition}.");
+            return new ActionResult(true, "");
         }
         else
         {

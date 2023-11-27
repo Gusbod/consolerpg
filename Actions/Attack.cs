@@ -14,14 +14,12 @@ class Attack : IAction
 
         if (new Random().Next(0, 100) < chanceToHit)
         {
-            int damagePotential = actor.GetAttribute("strength"); //Calculate max possible damage made by actor
+            int damagePotential = actor.GetAttribute("strength") * 10; //Calculate max possible damage made by actor
             targetEntity.TakeDamage(damagePotential);
-        }
-        else
-        {
-            return new ActionResult(false, $"{actor.Name} attack {targetEntity.Name}!");
+            return new ActionResult(true, $"{actor.Name} attack {targetEntity.Name}! {targetEntity.Health} HP left.");
         }
 
-        return new ActionResult(true, $"{actor.Name} attack {targetEntity.Name}!");
+        return new ActionResult(false, $"{actor.Name} miss {targetEntity.Name}!");
+
     }
 }

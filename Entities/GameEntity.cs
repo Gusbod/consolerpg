@@ -1,12 +1,16 @@
-using System.Collections.Specialized;
 using System.Numerics;
 
 class GameEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = "";
+    public string Description { get; set; } = "";
     public CharInfo CharInfo { get; set; }
+
     public Vector2 Position { get; set; }
+    public float subPositionX = 0; //when -1 should shift left, when 1 should shift right
+    public float subPositionY = 0; //when -1 should shift up, when 1 should shift down
+
     public virtual bool IsBlocking { get; set; } = true;
     public virtual bool IsVisible { get; set; } = true;
 
@@ -18,7 +22,7 @@ class GameEntity
 
     public int Weight { get; protected set; }
 
-    private int health;
+    private int health = 100;
     public int Health
     {
         get => health;
@@ -64,23 +68,23 @@ class GameEntity
         inventory.Remove(thing);
     }
 
-    public virtual void TakeDamage(int amount)
+    public void TakeDamage(int amount)
     {
         Health -= amount;
         if (Health <= 0)
         {
-            Health = 0;
             Die();
         }
     }
 
     private void Die()
     {
+        Health = 0;
         IsBlocking = false;
         CharInfo = new CharInfo('x', ConsoleColor.DarkRed);
     }
 
-    public virtual void Update()
+    public void Update()
     {
         OnUpdateAction.Execute(this, Position);
     }

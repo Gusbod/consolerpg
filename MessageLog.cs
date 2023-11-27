@@ -23,6 +23,8 @@ class MessageLog
 
     public void AddMessage(string message)
     {
+        if (string.IsNullOrWhiteSpace(message)) return;
+
         var splitMessage = message.Split('\n');
         foreach (var line in splitMessage)
         {
