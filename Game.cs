@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Text;
 
 //The game class deals with drawing the game to the console and handling input.
@@ -36,19 +37,21 @@ class Game
         // if (Console.KeyAvailable)
         // {
         var key = Console.ReadKey(true).Key;
+        Move moveAction = new Move();
+        ActionResult? result = null;
         switch (key)
         {
             case ConsoleKey.UpArrow:
-                world.MovePlayer(0, -1);
+                result = moveAction.Execute(world.Player, world.Player.Position + new Vector2(0, -1));
                 break;
             case ConsoleKey.DownArrow:
-                world.MovePlayer(0, 1);
+                result = moveAction.Execute(world.Player, world.Player.Position + new Vector2(0, 1));
                 break;
             case ConsoleKey.LeftArrow:
-                world.MovePlayer(-1, 0);
+                result = moveAction.Execute(world.Player, world.Player.Position + new Vector2(-1, 0));
                 break;
             case ConsoleKey.RightArrow:
-                world.MovePlayer(1, 0);
+                result = moveAction.Execute(world.Player, world.Player.Position + new Vector2(1, 0));
                 break;
             case ConsoleKey.Escape:
                 Console.SetCursorPosition(0, Console.WindowHeight - 1);
@@ -58,6 +61,12 @@ class Game
             default:
                 break;
         }
+
+        if (result != null)
+        {
+            messageLog.AddMessage(result.Message);
+        }
+
         // }
     }
 
@@ -118,7 +127,7 @@ class Game
         string[] playerInfo = {
             $"{world.Player.Name}",
             $"HP: {world.Player.Health}",
-            $"Str: {world.Player.Strength}"
+            $"Str: {world.Player.GetAttribute("Strength")}",
             //inventory and so on and so forth
         };
         ConsoleUtils.DrawTextBlock(startX, startY, characterInfoWidth, playerInfo, ConsoleColor.Gray);

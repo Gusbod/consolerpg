@@ -1,9 +1,13 @@
+using System.Numerics;
+
 class WorldGeneratorV1 : IWorldGenerator
 {
     int mapSize;
+    IEntityGenerator entityGenerator;
 
-    public WorldGeneratorV1(int _mapSize)
+    public WorldGeneratorV1(int _mapSize, IEntityGenerator entityGenerator)
     {
+        this.entityGenerator = entityGenerator;
         mapSize = _mapSize;
     }
 
@@ -13,6 +17,8 @@ class WorldGeneratorV1 : IWorldGenerator
 
         world.mapTiles = new CharInfo[mapSize, mapSize];
 
+        world.Player = entityGenerator.GetPlayer(mapSize / 2, mapSize / 2, world);
+
         CharInfo grass = new CharInfo('.', ConsoleColor.Green);
         for (int x = 0; x < world.MapSize; x++)
         {
@@ -20,17 +26,17 @@ class WorldGeneratorV1 : IWorldGenerator
             {
                 world.mapTiles[x, y] = grass;
 
-                if (Random.Next(0, 50) == 0)
+                if (Random.Next(0, 200) == 0)
                 {
-                    world.AddEntity(new Tree(x, y, world));
+                    world.AddEntity(entityGenerator.GetEnemy(x, y, world));
                 }
                 else if (Random.Next(0, 100) == 0)
                 {
-                    world.AddEntity(new Rock(x, y, world));
+                    world.AddEntity(entityGenerator.GetRock(x, y, world));
                 }
-                else if (Random.Next(0, 200) == 0)
+                else if (Random.Next(0, 25) == 0)
                 {
-                    world.AddEntity(new Enemy(x, y, world));
+                    world.AddEntity(entityGenerator.GetTree(x, y, world));
                 }
             }
         }

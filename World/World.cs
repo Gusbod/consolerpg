@@ -11,7 +11,7 @@ class World : IWorldInteraction
 {
     public CharInfo[,] mapTiles = new CharInfo[0, 0];
     public int MapSize => mapTiles.GetLength(0);
-    public Player Player { get; private set; }
+    public GameEntity Player { get; set; }
 
     readonly List<GameEntity> entities = new();
     readonly Dictionary<Vector2, GameEntity> entityPositionMap = new();
@@ -20,28 +20,9 @@ class World : IWorldInteraction
 
     public World(IWorldGenerator worldGenerator, MessageLog logger)
     {
+        Player = new GameEntity(this);
         worldGenerator.PopulateWorld(this);
         messageLog = logger;
-
-        Player = new Player(MapSize / 2, MapSize / 2, this);
-    }
-
-    public void MovePlayer(int x, int y)
-    {
-        Vector2 newPosition = Player.Position + new Vector2(x, y);
-        if (CanMoveTo(newPosition))
-        {
-            Player.Move(x, y);
-        }
-        else
-        {
-            GameEntity? entity = GetEntityAt(newPosition);
-            OnCollisionResult? result = entity?.OnCollision(Player);
-            if (result?.Message != null)
-            {
-                messageLog.AddMessage(result.Message);
-            }
-        }
     }
 
     public void Update()
