@@ -1,5 +1,4 @@
 ﻿MessageLog logger = new MessageLog();
-World world = new World(1024, logger);
-Game game = new Game(world, logger);
+World world = new World(new WorldGeneratorV1(1024), logger);
 
-game.Run();
+new Game(world, logger).Run();

@@ -9,7 +9,7 @@ interface IWorldInteraction
 
 class World : IWorldInteraction
 {
-    public CharInfo[,] mapTiles;
+    public CharInfo[,] mapTiles = new CharInfo[0, 0];
     public int MapSize => mapTiles.GetLength(0);
     public Player Player { get; private set; }
 
@@ -18,12 +18,12 @@ class World : IWorldInteraction
 
     MessageLog messageLog;
 
-    public World(int mapWidth, MessageLog logger)
+    public World(IWorldGenerator worldGenerator, MessageLog logger)
     {
-        mapTiles = new CharInfo[mapWidth, mapWidth];
+        worldGenerator.PopulateWorld(this);
         messageLog = logger;
-        Player = new Player(mapWidth / 2, mapWidth / 2, this);
-        GenerateMap();
+
+        Player = new Player(MapSize / 2, MapSize / 2, this);
     }
 
     public void MovePlayer(int x, int y)
@@ -82,6 +82,12 @@ class World : IWorldInteraction
         }
     }
 
+    public GameEntity? GetEntityAt(Vector2 position)
+    {
+        entityPositionMap.TryGetValue(position, out GameEntity? entity);
+        return entity;
+    }
+
     public bool CanMoveTo(Vector2 vector2)
     {
         if (vector2.X < 0 || vector2.X >= MapSize || vector2.Y < 0 || vector2.Y >= MapSize)
@@ -107,46 +113,6 @@ class World : IWorldInteraction
         else
         {
             return false;
-        }
-    }
-
-    public GameEntity? GetEntityAt(Vector2 position)
-    {
-        entityPositionMap.TryGetValue(position, out GameEntity? entity);
-        return entity;
-    }
-
-    private void GenerateMap()
-    {
-        Random Random = new Random();
-
-        CharInfo grass = new CharInfo('.', ConsoleColor.Green);
-        for (int x = 0; x < MapSize; x++)
-        {
-            for (int y = 0; y < MapSize; y++)
-            {
-                // if (Random.Next(0, 10) == 0)
-                // {
-                //     mapTiles[x, y] = ',';
-                // }
-                // else
-                // {
-                mapTiles[x, y] = grass;
-                // }
-
-                if (Random.Next(0, 50) == 0)
-                {
-                    AddEntity(new Tree(x, y, this));
-                }
-                else if (Random.Next(0, 100) == 0)
-                {
-                    AddEntity(new Rock(x, y, this));
-                }
-                else if (Random.Next(0, 200) == 0)
-                {
-                    AddEntity(new Enemy(x, y, this));
-                }
-            }
         }
     }
 }

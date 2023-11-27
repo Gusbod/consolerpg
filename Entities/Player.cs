@@ -2,6 +2,7 @@ using System.Numerics;
 
 class Player : GameEntity, IAttacker, IAttackable
 {
+    public int Gold { get; set; }
     public int XP { get; set; }
     public int Level => XP / 10 + 1;
 
