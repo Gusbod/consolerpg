@@ -10,6 +10,7 @@ abstract class GameEntity
     public virtual bool IsVisible { get; set; } = true;
 
     protected IWorldInteraction world;
+    public IWorldInteraction World => world;
 
     public int Weight { get; set; }
     public int Health { get; set; }
