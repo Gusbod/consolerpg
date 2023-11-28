@@ -26,10 +26,16 @@ class Game
         //This is the main game loop.
         while (true)
         {
-            Draw();
-            HandleInput();
-            Update();
+            DrawStuffOnScreen();
+            UpdateLogic();
         }
+    }
+
+    public void UpdateLogic()
+    {
+        messageLog.Update();
+        world.Update();
+        HandleInput();
     }
 
     private void HandleInput()
@@ -70,7 +76,7 @@ class Game
         // }
     }
 
-    public void Draw()
+    public void DrawStuffOnScreen()
     {
         DrawMap();
         DrawPlayerInfo(mapWidth + 1, 0);
@@ -131,11 +137,5 @@ class Game
             //inventory and so on and so forth
         };
         ConsoleUtils.DrawTextBlock(startX, startY, characterInfoWidth, playerInfo, ConsoleColor.Gray);
-    }
-
-    public void Update()
-    {
-        messageLog.Update();
-        world.Update();
     }
 }
