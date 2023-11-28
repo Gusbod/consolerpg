@@ -1,5 +1,8 @@
 using System.Numerics;
 
+//This action will attack any entity that is adjacent to the actor
+//Used by enemies in the update phase for example.
+
 class AttackAdjacent : IAction
 {
     public ActionResult Execute(GameEntity actor, Vector2 targetPosition)
@@ -7,7 +10,6 @@ class AttackAdjacent : IAction
         bool attacked = false;
         string resultMessage = "";
 
-        // Directions represent the eight adjacent positions
         Vector2[] directions = new Vector2[]
         {
             new Vector2(0, -1), // North
@@ -28,7 +30,7 @@ class AttackAdjacent : IAction
             {
                 var targetEntity = actor.World.Player;
                 attacked = true;
-                if (new Random().Next(0, 100) < 75) // Chance to hit
+                if (new Random().Next(0, 100) < 50) // Chance to hit. Make it depends on attributes
                 {
                     int damage = actor.GetAttribute("strength") * 10;
                     targetEntity.TakeDamage(damage);
