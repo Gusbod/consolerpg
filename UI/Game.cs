@@ -15,7 +15,7 @@ class Game
         Console.Clear();
         Console.CursorVisible = false;
 
-        mapWidth = Console.WindowWidth - characterInfoWidth - 1;
+        mapWidth = Console.WindowWidth - characterInfoWidth - 1; //-1 because of reasons I guess
         mapHeight = Console.WindowHeight - messageLog.Lines - 1;
         this.world = world;
         this.messageLog = messageLog;
@@ -23,7 +23,6 @@ class Game
 
     public void Run()
     {
-        //This is the main game loop.
         while (true)
         {
             DrawStuffOnScreen();

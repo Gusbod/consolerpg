@@ -7,7 +7,9 @@ class EntityGeneratorV1 : IEntityGenerator
         WorldEntity entity = new WorldEntity(world)
         {
             Name = "Alf",
-            CharInfo = new CharInfo('@', ConsoleColor.White),
+            // CharInfo = new CharInfo('@', ConsoleColor.White),
+            CharInfo = new CharInfo('☻', ConsoleColor.Yellow),
+
             Position = new Vector2(x, y),
         };
 
@@ -22,8 +24,12 @@ class EntityGeneratorV1 : IEntityGenerator
     {
         WorldEntity entity = new WorldEntity(world)
         {
-            Name = "Goblin",
-            CharInfo = new CharInfo('g', ConsoleColor.Red),
+            Name = "Bandit",
+            // CharInfo = new CharInfo('B', ConsoleColor.Red),
+            // CharInfo = new CharInfo('☻', ConsoleColor.Red),
+            CharInfo = new CharInfo('☺', ConsoleColor.Red),
+            // CharInfo = new CharInfo('☻', ConsoleColor.Red),
+
             Position = new Vector2(x, y),
             OnCollideAction = new Attack(),
             OnUpdateAction = new LookForTarget()
@@ -40,7 +46,10 @@ class EntityGeneratorV1 : IEntityGenerator
         WorldEntity entity = new(world)
         {
             Name = "Tree",
-            CharInfo = new CharInfo('T', ConsoleColor.Green),
+            // CharInfo = new CharInfo('↑', ConsoleColor.Green),
+            // CharInfo = new CharInfo('♣', ConsoleColor.Green),
+            // CharInfo = new CharInfo('♠', ConsoleColor.Green),
+            CharInfo = new CharInfo('↟', ConsoleColor.Green),
             Position = new Vector2(x, y)
         };
 
@@ -52,7 +61,11 @@ class EntityGeneratorV1 : IEntityGenerator
         WorldEntity entity = new(world)
         {
             Name = "Rock",
-            CharInfo = new CharInfo('o', ConsoleColor.DarkGray),
+            // CharInfo = new CharInfo('o', ConsoleColor.DarkGray),
+            // CharInfo = new CharInfo('O', ConsoleColor.DarkGray),
+            // CharInfo = new CharInfo('○', ConsoleColor.DarkGray),
+            CharInfo = new CharInfo('●', ConsoleColor.DarkGray),
+
             Position = new Vector2(x, y),
             OnCollideAction = new Push()
         };

@@ -27,7 +27,7 @@ class World : IWorldInteraction
     public void Update()
     {
         // Check a 50x50 area around the player and update all entities in that area
-        int area = 50;
+        int area = 25;
         int playerX = (int)Player.Position.X;
         int playerY = (int)Player.Position.Y;
 
@@ -39,10 +39,7 @@ class World : IWorldInteraction
                 if (entity != null)
                 {
                     ActionResult result = entity.Update();
-                    if (result.Success)
-                    {
-                        Console.WriteLine(result.Message);
-                    }
+                    //TODO handle the result so that it can be logged to the message log
                 }
             }
         }

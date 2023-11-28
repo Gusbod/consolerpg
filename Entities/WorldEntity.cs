@@ -81,7 +81,7 @@ class WorldEntity
     {
         Health = 0;
         IsBlocking = false;
-        CharInfo = new CharInfo('x', ConsoleColor.DarkRed);
+        CharInfo = new CharInfo('×', ConsoleColor.DarkRed);
         OnCollideAction = new NoAction();
         OnUpdateAction = new NoAction();
     }

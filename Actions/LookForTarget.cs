@@ -15,7 +15,7 @@ class LookForTarget : IAction
 
                 Vector2 adjacentPosition = actor.Position + new Vector2(dx, dy);
 
-                if (actor.World.Player.Position == adjacentPosition)
+                if (actor.World.Player.Position == adjacentPosition) //TODO this should be configurable somehow, what is it looking for?
                 {
                     Attack attackAction = new Attack();
                     return attackAction.Execute(actor, actor.World.Player.Position);
