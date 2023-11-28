@@ -1,12 +1,11 @@
 using System.Numerics;
 
-class MovePlayer : IAction
+class Move : IAction
 {
     public ActionResult Execute(WorldEntity actor, Vector2 targetPosition)
     {
-        if (actor.World.CanMoveTo(targetPosition))
+        if (actor.World.TryMoveEntity(actor, targetPosition))
         {
-            actor.Position = targetPosition;
             return new ActionResult(true, "");
         }
         else

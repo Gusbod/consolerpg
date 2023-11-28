@@ -1,5 +1,3 @@
-using System.Numerics;
-
 class WorldGeneratorV1 : IWorldGenerator
 {
     int mapSize;
@@ -16,8 +14,6 @@ class WorldGeneratorV1 : IWorldGenerator
         Random Random = new Random();
 
         world.mapTiles = new CharInfo[mapSize, mapSize];
-
-        world.Player = entityGenerator.GetPlayer(mapSize / 2, mapSize / 2, world);
 
         CharInfo grass = new CharInfo('.', ConsoleColor.Green);
         for (int x = 0; x < world.MapSize; x++)
@@ -41,9 +37,15 @@ class WorldGeneratorV1 : IWorldGenerator
             }
         }
     }
+
+    public WorldEntity GetPlayer(World world)
+    {
+        return entityGenerator.GetPlayer(mapSize / 2, mapSize / 2, world);
+    }
 }
 
 interface IWorldGenerator
 {
     void PopulateWorld(World world);
+    WorldEntity GetPlayer(World world);
 }

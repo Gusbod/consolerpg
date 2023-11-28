@@ -16,8 +16,9 @@ class WorldEntity
     protected IWorldInteraction world;
     public IWorldInteraction World => world;
 
-    public IAction OnCollideAction { get; set; } = new Examine();
-    public IAction OnUpdateAction { get; set; } = new NoAction();
+    public IAction OnCollideAction { get; set; } = new Examine(); //What action will the entity perform if trying to move into the same space as another entity?
+    public IAction OnUpdateAction { get; set; } = new NoAction(); //What action will the entity perform on each update tick?
+    public IAction MoveAction { get; set; } = new Move(); //What action will the entity perform when trying to move?
 
     public int Weight { get; protected set; }
 
@@ -81,10 +82,12 @@ class WorldEntity
         Health = 0;
         IsBlocking = false;
         CharInfo = new CharInfo('x', ConsoleColor.DarkRed);
+        OnCollideAction = new NoAction();
+        OnUpdateAction = new NoAction();
     }
 
-    public void Update()
+    public ActionResult Update()
     {
-        OnUpdateAction.Execute(this, Position);
+        return OnUpdateAction.Execute(this, Position);
     }
 }

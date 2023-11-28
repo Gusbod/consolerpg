@@ -43,21 +43,20 @@ class Game
         // if (Console.KeyAvailable)
         // {
         var key = Console.ReadKey(true).Key;
-        MovePlayer moveAction = new MovePlayer();
         ActionResult? result = null;
         switch (key)
         {
             case ConsoleKey.UpArrow:
-                result = moveAction.Execute(world.Player, world.Player.Position + new Vector2(0, -1));
+                result = world.Player.MoveAction.Execute(world.Player, world.Player.Position + new Vector2(0, -1));
                 break;
             case ConsoleKey.DownArrow:
-                result = moveAction.Execute(world.Player, world.Player.Position + new Vector2(0, 1));
+                result = world.Player.MoveAction.Execute(world.Player, world.Player.Position + new Vector2(0, 1));
                 break;
             case ConsoleKey.LeftArrow:
-                result = moveAction.Execute(world.Player, world.Player.Position + new Vector2(-1, 0));
+                result = world.Player.MoveAction.Execute(world.Player, world.Player.Position + new Vector2(-1, 0));
                 break;
             case ConsoleKey.RightArrow:
-                result = moveAction.Execute(world.Player, world.Player.Position + new Vector2(1, 0));
+                result = world.Player.MoveAction.Execute(world.Player, world.Player.Position + new Vector2(1, 0));
                 break;
             case ConsoleKey.Escape:
                 Console.SetCursorPosition(0, Console.WindowHeight - 1);

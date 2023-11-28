@@ -20,15 +20,31 @@ class World : IWorldInteraction
 
     public World(IWorldGenerator worldGenerator)
     {
-        Player = new WorldEntity(this);
         worldGenerator.PopulateWorld(this);
+        Player = worldGenerator.GetPlayer(this);
     }
 
     public void Update()
     {
-        foreach (WorldEntity entity in entities)
+        // Check a 50x50 area around the player and update all entities in that area
+        int area = 50;
+        int playerX = (int)Player.Position.X;
+        int playerY = (int)Player.Position.Y;
+
+        for (int dx = playerX - area; dx <= playerX + area; dx++)
         {
-            entity.Update();
+            for (int dy = playerY - area; dy <= playerY + area; dy++)
+            {
+                WorldEntity? entity = GetEntityAt(new Vector2(dx, dy));
+                if (entity != null)
+                {
+                    ActionResult result = entity.Update();
+                    if (result.Success)
+                    {
+                        Console.WriteLine(result.Message);
+                    }
+                }
+            }
         }
     }
 

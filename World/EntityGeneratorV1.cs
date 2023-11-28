@@ -30,7 +30,7 @@ class EntityGeneratorV1 : IEntityGenerator
         };
         entity.SetAttribute("Strength", 1);
         entity.SetAttribute("Dexterity", 1);
-        entity.SetAttribute("Protection", 2);
+        entity.SetAttribute("Protection", 1);
 
         return entity;
     }
