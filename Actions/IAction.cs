@@ -2,5 +2,5 @@ using System.Numerics;
 
 interface IAction
 {
-    ActionResult Execute(GameEntity actor, Vector2 targetPosition);
+    ActionResult Execute(WorldEntity actor, Vector2 targetPosition);
 }

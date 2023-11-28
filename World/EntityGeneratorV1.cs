@@ -2,9 +2,9 @@ using System.Numerics;
 
 class EntityGeneratorV1 : IEntityGenerator
 {
-    public GameEntity GetPlayer(int x, int y, IWorldInteraction world)
+    public WorldEntity GetPlayer(int x, int y, IWorldInteraction world)
     {
-        GameEntity entity = new GameEntity(world)
+        WorldEntity entity = new WorldEntity(world)
         {
             Name = "Alf",
             CharInfo = new CharInfo('@', ConsoleColor.White),
@@ -18,15 +18,15 @@ class EntityGeneratorV1 : IEntityGenerator
         return entity;
     }
 
-    public GameEntity GetEnemy(int x, int y, IWorldInteraction world)
+    public WorldEntity GetEnemy(int x, int y, IWorldInteraction world)
     {
-        GameEntity entity = new GameEntity(world)
+        WorldEntity entity = new WorldEntity(world)
         {
             Name = "Goblin",
             CharInfo = new CharInfo('g', ConsoleColor.Red),
             Position = new Vector2(x, y),
             OnCollideAction = new Attack(),
-            OnUpdateAction = new AttackAdjacent()
+            OnUpdateAction = new LookForTarget()
         };
         entity.SetAttribute("Strength", 1);
         entity.SetAttribute("Dexterity", 1);
@@ -35,9 +35,9 @@ class EntityGeneratorV1 : IEntityGenerator
         return entity;
     }
 
-    public GameEntity GetTree(int x, int y, IWorldInteraction world)
+    public WorldEntity GetTree(int x, int y, IWorldInteraction world)
     {
-        GameEntity entity = new(world)
+        WorldEntity entity = new(world)
         {
             Name = "Tree",
             CharInfo = new CharInfo('T', ConsoleColor.Green),
@@ -47,9 +47,9 @@ class EntityGeneratorV1 : IEntityGenerator
         return entity;
     }
 
-    public GameEntity GetRock(int x, int y, IWorldInteraction world)
+    public WorldEntity GetRock(int x, int y, IWorldInteraction world)
     {
-        GameEntity entity = new(world)
+        WorldEntity entity = new(world)
         {
             Name = "Rock",
             CharInfo = new CharInfo('o', ConsoleColor.DarkGray),
@@ -63,8 +63,8 @@ class EntityGeneratorV1 : IEntityGenerator
 
 interface IEntityGenerator
 {
-    GameEntity GetPlayer(int x, int y, IWorldInteraction world);
-    GameEntity GetEnemy(int x, int y, IWorldInteraction world);
-    GameEntity GetTree(int x, int y, IWorldInteraction world);
-    GameEntity GetRock(int x, int y, IWorldInteraction world);
+    WorldEntity GetPlayer(int x, int y, IWorldInteraction world);
+    WorldEntity GetEnemy(int x, int y, IWorldInteraction world);
+    WorldEntity GetTree(int x, int y, IWorldInteraction world);
+    WorldEntity GetRock(int x, int y, IWorldInteraction world);
 }

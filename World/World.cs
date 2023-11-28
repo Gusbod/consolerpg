@@ -3,42 +3,42 @@ using System.Numerics;
 interface IWorldInteraction
 {
     bool CanMoveTo(Vector2 position);
-    bool TryMoveEntity(GameEntity entity, Vector2 newPosition);
-    GameEntity? GetEntityAt(Vector2 position);
-    GameEntity Player { get; }
+    bool TryMoveEntity(WorldEntity entity, Vector2 newPosition);
+    WorldEntity? GetEntityAt(Vector2 position);
+    WorldEntity Player { get; }
 }
 
 class World : IWorldInteraction
 {
     public CharInfo[,] mapTiles = new CharInfo[0, 0];
     public int MapSize => mapTiles.GetLength(0);
-    public GameEntity Player { get; set; }
+    public WorldEntity Player { get; set; }
 
-    readonly List<GameEntity> entities = new();
-    readonly Dictionary<Vector2, GameEntity> entityPositionMap = new();
+    readonly List<WorldEntity> entities = new();
+    readonly Dictionary<Vector2, WorldEntity> entityPositionMap = new();
 
 
     public World(IWorldGenerator worldGenerator)
     {
-        Player = new GameEntity(this);
+        Player = new WorldEntity(this);
         worldGenerator.PopulateWorld(this);
     }
 
     public void Update()
     {
-        foreach (GameEntity entity in entities)
+        foreach (WorldEntity entity in entities)
         {
             entity.Update();
         }
     }
 
-    public void AddEntity(GameEntity entity)
+    public void AddEntity(WorldEntity entity)
     {
         entityPositionMap[entity.Position] = entity;
         entities.Add(entity);
     }
 
-    public void UpdateEntityPosition(GameEntity entity, Vector2 newPosition)
+    public void UpdateEntityPosition(WorldEntity entity, Vector2 newPosition)
     {
         entityPositionMap.Remove(entity.Position);
         entity.Position = newPosition;
@@ -54,7 +54,7 @@ class World : IWorldInteraction
 
         Vector2 position = new Vector2(x, y);
 
-        if (entityPositionMap.TryGetValue(position, out GameEntity? entity))
+        if (entityPositionMap.TryGetValue(position, out WorldEntity? entity))
         {
             return entity.CharInfo;
         }
@@ -64,9 +64,9 @@ class World : IWorldInteraction
         }
     }
 
-    public GameEntity? GetEntityAt(Vector2 position)
+    public WorldEntity? GetEntityAt(Vector2 position)
     {
-        entityPositionMap.TryGetValue(position, out GameEntity? entity);
+        entityPositionMap.TryGetValue(position, out WorldEntity? entity);
         return entity;
     }
 
@@ -77,7 +77,7 @@ class World : IWorldInteraction
             return false;
         }
 
-        if (entityPositionMap.TryGetValue(vector2, out GameEntity? entity))
+        if (entityPositionMap.TryGetValue(vector2, out WorldEntity? entity))
         {
             return !entity.IsBlocking;
         }
@@ -85,7 +85,7 @@ class World : IWorldInteraction
         return true;
     }
 
-    public bool TryMoveEntity(GameEntity entity, Vector2 newPosition)
+    public bool TryMoveEntity(WorldEntity entity, Vector2 newPosition)
     {
         if (CanMoveTo(newPosition))
         {

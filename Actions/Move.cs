@@ -2,7 +2,7 @@ using System.Numerics;
 
 class MovePlayer : IAction
 {
-    public ActionResult Execute(GameEntity actor, Vector2 targetPosition)
+    public ActionResult Execute(WorldEntity actor, Vector2 targetPosition)
     {
         if (actor.World.CanMoveTo(targetPosition))
         {

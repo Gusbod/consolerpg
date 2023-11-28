@@ -1,18 +1,17 @@
 using System.Numerics;
 
-class GameEntity
+class WorldEntity
 {
-    public int Id { get; set; }
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
     public CharInfo CharInfo { get; set; }
 
     public Vector2 Position { get; set; }
-    public float subPositionX = 0; //when -1 should shift left, when 1 should shift right
-    public float subPositionY = 0; //when -1 should shift up, when 1 should shift down
+    public float subPositionX = 0; //when -1 should move left, when 1 should move right
+    public float subPositionY = 0; //when -1 should move up, when 1 should move down
 
-    public virtual bool IsBlocking { get; set; } = true;
-    public virtual bool IsVisible { get; set; } = true;
+    public virtual bool IsBlocking { get; set; } = true; //True means other entities cant occupy the same space (which is buggy anyways..)
+    public virtual bool IsVisible { get; set; } = true; //Used for traps and ghosts and stuff maybe?
 
     protected IWorldInteraction world;
     public IWorldInteraction World => world;
@@ -36,7 +35,7 @@ class GameEntity
     private readonly Dictionary<string, int> attributes = new();
     private readonly List<Thing> inventory = new();
 
-    public GameEntity(IWorldInteraction world)
+    public WorldEntity(IWorldInteraction world)
     {
         this.world = world;
     }

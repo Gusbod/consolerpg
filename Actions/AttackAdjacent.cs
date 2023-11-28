@@ -3,13 +3,10 @@ using System.Numerics;
 //This action will attack any entity that is adjacent to the actor
 //Used by enemies in the update phase for example.
 
-class AttackAdjacent : IAction
+class LookForTarget : IAction
 {
-    public ActionResult Execute(GameEntity actor, Vector2 targetPosition)
+    public ActionResult Execute(WorldEntity actor, Vector2 targetPosition)
     {
-        bool attacked = false;
-        string resultMessage = "";
-
         Vector2[] directions = new Vector2[]
         {
             new Vector2(0, -1), // North
@@ -28,27 +25,12 @@ class AttackAdjacent : IAction
 
             if (actor.World.Player.Position == adjacentPosition)
             {
-                var targetEntity = actor.World.Player;
-                attacked = true;
-                if (new Random().Next(0, 100) < 50) // Chance to hit. Make it depends on attributes
-                {
-                    int damage = actor.GetAttribute("strength") * 10;
-                    targetEntity.TakeDamage(damage);
-                    resultMessage += $"{actor.Name} attacks {targetEntity.Name} at ({adjacentPosition.X}, {adjacentPosition.Y})! {targetEntity.Health} HP left.\n";
-                }
-                else
-                {
-                    resultMessage += $"{actor.Name} misses {targetEntity.Name} at ({adjacentPosition.X}, {adjacentPosition.Y})!\n";
-                }
+                Attack attackAction = new Attack();
+                return attackAction.Execute(actor, actor.World.Player.Position);
             }
         }
 
-        if (!attacked)
-        {
-            return new ActionResult(false, $"{actor.Name} found no one to attack.");
-        }
-
-        return new ActionResult(true, resultMessage.TrimEnd());
+        return new ActionResult(false, $"{actor.Name} found no one to attack.");
     }
 
 }

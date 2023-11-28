@@ -2,7 +2,7 @@ using System.Numerics;
 
 class Push : IAction
 {
-    public ActionResult Execute(GameEntity actor, Vector2 targetPosition)
+    public ActionResult Execute(WorldEntity actor, Vector2 targetPosition)
     {
         var targetEntity = actor.World.GetEntityAt(targetPosition);
         if (targetEntity != null)
