@@ -15,7 +15,7 @@ class WorldGeneratorV1 : IWorldGenerator
     {
         Random Random = new Random();
 
-        world.mapTiles = new CharInfo[mapSize, mapSize];
+        world.groundTiles = new CharInfo[mapSize, mapSize];
 
         int numberOfTreeClusters = mapSize / 2; // Number of tree clusters
         int clusterRadius = 10; // Radius around cluster center where trees are more likely
@@ -32,7 +32,7 @@ class WorldGeneratorV1 : IWorldGenerator
         {
             for (int y = 0; y < world.MapSize; y++)
             {
-                world.mapTiles[x, y] = grass; //GetRandomGrassChar(Random);
+                world.groundTiles[x, y] = grass; //GetRandomGrassChar(Random);
 
                 if (Random.Next(0, 500) == 0)
                 {

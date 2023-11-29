@@ -10,8 +10,8 @@ interface IWorldInteraction
 
 class World : IWorldInteraction
 {
-    public CharInfo[,] mapTiles = new CharInfo[0, 0];
-    public int MapSize => mapTiles.GetLength(0);
+    public CharInfo[,] groundTiles = new CharInfo[0, 0];
+    public int MapSize => groundTiles.GetLength(0);
     public WorldEntity Player { get; set; }
 
     readonly List<WorldEntity> entities = new();
@@ -73,7 +73,7 @@ class World : IWorldInteraction
         }
         else
         {
-            return mapTiles[x, y];
+            return groundTiles[x, y];
         }
     }
 
