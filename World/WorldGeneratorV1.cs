@@ -83,8 +83,9 @@ class WorldGeneratorV1 : IWorldGenerator
 
     private TileInfo GetNoiseBasedTile(int x, int y)
     {
-        // Simple noise generation based on position
-        double noise = Math.Sin(x * 0.05) * Math.Cos(y * 0.15);
+        double noise1 = Math.Sin((x + random.NextDouble() * 10) * 0.05) * Math.Cos((y + random.NextDouble() * 10) * 0.15);
+        double noise2 = Math.Sin(x * 0.1 + y * 0.1) * Math.Cos(y * 0.2 - x * 0.2);
+        double noise = noise1 * 0.5 + noise2 * 0.5;
 
         if (noise > 0.6)
             return new TileInfo('~', ConsoleColor.DarkBlue, true);
