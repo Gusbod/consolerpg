@@ -10,7 +10,7 @@ interface IWorldInteraction
 
 class World : IWorldInteraction
 {
-    public TileInfo[,] groundTiles = new TileInfo[0, 0];
+    public Tile[,] groundTiles = new Tile[0, 0];
     public int MapSize => groundTiles.GetLength(0);
     public WorldEntity Player { get; set; }
 
@@ -60,11 +60,11 @@ class World : IWorldInteraction
         entityPositionMap[entity.Position] = entity;
     }
 
-    public TileInfo GetTileInfoAt(int x, int y)
+    public Tile GetTileInfoAt(int x, int y)
     {
         if (x < 0 || x >= MapSize || y < 0 || y >= MapSize)
         {
-            return new TileInfo(' ', ConsoleColor.Black); // Empty space
+            return new Tile(' ', ConsoleColor.Black); // Empty space
         }
 
         Vector2 position = new(x, y);

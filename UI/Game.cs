@@ -133,7 +133,7 @@ class Game
                 int worldX = (int)(world.Player.Position.X - mapWidth / 2 + x);
                 int worldY = (int)(world.Player.Position.Y - mapHeight / 2 + y);
 
-                TileInfo charInfo = world.GetTileInfoAt(worldX, worldY);
+                Tile charInfo = world.GetTileInfoAt(worldX, worldY);
 
                 if (charInfo.Color != lastColor)
                 {

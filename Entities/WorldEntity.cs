@@ -4,7 +4,7 @@ class WorldEntity
 {
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
-    public TileInfo CharInfo { get; set; }
+    public Tile CharInfo { get; set; }
 
     public Vector2 Position { get; set; }
     public float subPositionX = 0; //when -1 should move left, when 1 should move right
@@ -81,7 +81,7 @@ class WorldEntity
     {
         Health = 0;
         IsBlocking = false;
-        CharInfo = new TileInfo('×', ConsoleColor.DarkRed);
+        CharInfo = new Tile('×', ConsoleColor.DarkRed);
         OnCollideAction = new NoAction();
         OnUpdateAction = new NoAction();
     }

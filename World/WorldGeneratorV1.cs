@@ -19,7 +19,7 @@ class WorldGeneratorV1 : IWorldGenerator
 
     public void PopulateWorld(World world)
     {
-        world.groundTiles = new TileInfo[mapSize, mapSize];
+        world.groundTiles = new Tile[mapSize, mapSize];
 
         for (int x = 0; x < world.MapSize; x++)
         {
@@ -51,7 +51,7 @@ class WorldGeneratorV1 : IWorldGenerator
                 }
                 else if (random.Next(0, 100) == 0)
                 {
-                    TileInfo tile = world.GetTileInfoAt(x, y);
+                    Tile tile = world.GetTileInfoAt(x, y);
                     if (tile.Color == ConsoleColor.DarkGreen)
                         world.AddEntity(entityGenerator.GetTree(x, y, world));
                 }
@@ -81,26 +81,26 @@ class WorldGeneratorV1 : IWorldGenerator
         return false;
     }
 
-    private TileInfo GetNoiseBasedTile(int x, int y)
+    private Tile GetNoiseBasedTile(int x, int y)
     {
         double noise1 = Math.Sin((x + random.NextDouble() * 10) * 0.05) * Math.Cos((y + random.NextDouble() * 10) * 0.15);
         double noise2 = Math.Sin(x * 0.1 + y * 0.1) * Math.Cos(y * 0.2 - x * 0.2);
         double noise = noise1 * 0.5 + noise2 * 0.5;
 
         if (noise > 0.6)
-            return new TileInfo('~', ConsoleColor.DarkBlue, true);
+            return new Tile('~', ConsoleColor.DarkBlue, true);
         else if (noise > 0.5)
-            return new TileInfo('·', ConsoleColor.DarkYellow);
+            return new Tile('·', ConsoleColor.DarkYellow);
         else
             return GetRandomGrassTile();
     }
 
-    private TileInfo GetRandomGrassTile()
+    private Tile GetRandomGrassTile()
     {
         ConsoleColor[] grassColors = new ConsoleColor[] { ConsoleColor.DarkGreen }; // Different grass colors
         ConsoleColor color = grassColors[random.Next(grassColors.Length)];
 
-        return new TileInfo(GetRandomGrassChar(), color);
+        return new Tile(GetRandomGrassChar(), color);
     }
 
     private char GetRandomGrassChar()
