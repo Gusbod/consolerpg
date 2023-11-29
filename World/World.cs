@@ -53,11 +53,26 @@ class World : IWorldInteraction
         entities.Add(entity);
     }
 
-    public void UpdateEntityPosition(WorldEntity entity, Vector2 newPosition)
+    private void SetEntityPosition(WorldEntity entity, Vector2 newPosition)
     {
+        var oldPosition = entity.Position;
+
         entityPositionMap.Remove(entity.Position);
         entity.Position = newPosition;
         entityPositionMap[entity.Position] = entity;
+
+        //FIXME A bit hacky way to make sure that entities other entities walk into, show up
+        //again on the map. Keep until we have a way to have multiple entities on the same spot
+        foreach (var otherEntity in entities)
+        {
+            if (otherEntity == entity) continue;
+
+            if (otherEntity.Position == oldPosition)
+            {
+                entityPositionMap[otherEntity.Position] = otherEntity;
+                break;
+            }
+        }
     }
 
     public Tile GetTileInfoAt(int x, int y)
@@ -120,7 +135,7 @@ class World : IWorldInteraction
     {
         if (CanMoveTo(newPosition))
         {
-            UpdateEntityPosition(entity, newPosition);
+            SetEntityPosition(entity, newPosition);
             return true;
         }
         else
