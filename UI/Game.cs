@@ -90,6 +90,37 @@ class Game
         Console.SetCursorPosition(0, 0);
     }
 
+    // private void DrawMap()
+    // {
+    //     StringBuilder stringBuilder = new StringBuilder();
+    //     ConsoleColor lastColor = Console.ForegroundColor;
+
+    //     for (int y = 0; y < mapHeight; y++)
+    //     {
+    //         for (int x = 0; x < mapWidth; x++)
+    //         {
+    //             int worldX = (int)(world.Player.Position.X - mapWidth / 2 + x);
+    //             int worldY = (int)(world.Player.Position.Y - mapHeight / 2 + y);
+
+    //             TileInfo charInfo = world.GetTileInfoAt(worldX, worldY);
+
+    //             if (charInfo.Color != lastColor)
+    //             {
+    //                 Console.Write(stringBuilder.ToString());
+    //                 stringBuilder.Clear();
+    //                 Console.ForegroundColor = charInfo.Color;
+    //                 lastColor = charInfo.Color;
+    //             }
+
+    //             stringBuilder.Append(charInfo.Symbol);
+    //         }
+    //         stringBuilder.AppendLine();
+    //     }
+
+    //     // Write any remaining content in the stringBuilder to the console
+    //     Console.Write(stringBuilder.ToString());
+    // }
+
     private void DrawMap()
     {
         StringBuilder stringBuilder = new StringBuilder();
@@ -102,17 +133,15 @@ class Game
                 int worldX = (int)(world.Player.Position.X - mapWidth / 2 + x);
                 int worldY = (int)(world.Player.Position.Y - mapHeight / 2 + y);
 
-                CharInfo charInfo = world.GetCharInfoAt(worldX, worldY);
-
-                if (world.Player.Position.X == worldX && world.Player.Position.Y == worldY)
-                {
-                    charInfo = world.Player.CharInfo;
-                }
+                TileInfo charInfo = world.GetTileInfoAt(worldX, worldY);
 
                 if (charInfo.Color != lastColor)
                 {
-                    Console.Write(stringBuilder.ToString());
-                    stringBuilder.Clear();
+                    if (stringBuilder.Length > 0)
+                    {
+                        Console.Write(stringBuilder.ToString());
+                        stringBuilder.Clear();
+                    }
                     Console.ForegroundColor = charInfo.Color;
                     lastColor = charInfo.Color;
                 }
@@ -123,8 +152,16 @@ class Game
         }
 
         // Write any remaining content in the stringBuilder to the console
-        Console.Write(stringBuilder.ToString());
+        if (stringBuilder.Length > 0)
+        {
+            Console.Write(stringBuilder.ToString());
+        }
+
+        // Reset console color
+        Console.ForegroundColor = ConsoleColor.White;
     }
+
+
 
     private void DrawPlayerInfo(int startX, int startY)
     {

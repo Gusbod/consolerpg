@@ -8,7 +8,7 @@ class EntityGeneratorV1 : IEntityGenerator
         {
             Name = "Alf",
             // CharInfo = new CharInfo('@', ConsoleColor.White),
-            CharInfo = new CharInfo('☻', ConsoleColor.Yellow),
+            CharInfo = new TileInfo('☻', ConsoleColor.Yellow),
 
             Position = new Vector2(x, y),
         };
@@ -27,7 +27,7 @@ class EntityGeneratorV1 : IEntityGenerator
             Name = "Bandit",
             // CharInfo = new CharInfo('B', ConsoleColor.Red),
             // CharInfo = new CharInfo('☻', ConsoleColor.Red),
-            CharInfo = new CharInfo('☺', ConsoleColor.Red),
+            CharInfo = new TileInfo('☺', ConsoleColor.Red),
             // CharInfo = new CharInfo('☻', ConsoleColor.Red),
 
             Position = new Vector2(x, y),
@@ -49,7 +49,7 @@ class EntityGeneratorV1 : IEntityGenerator
             // CharInfo = new CharInfo('↑', ConsoleColor.Green),
             // CharInfo = new CharInfo('♣', ConsoleColor.Green),
             // CharInfo = new CharInfo('♠', ConsoleColor.Green),
-            CharInfo = new CharInfo('↟', ConsoleColor.Green),
+            CharInfo = new TileInfo('↟', ConsoleColor.Green),
             Position = new Vector2(x, y)
         };
 
@@ -64,7 +64,7 @@ class EntityGeneratorV1 : IEntityGenerator
             // CharInfo = new CharInfo('o', ConsoleColor.DarkGray),
             // CharInfo = new CharInfo('O', ConsoleColor.DarkGray),
             // CharInfo = new CharInfo('○', ConsoleColor.DarkGray),
-            CharInfo = new CharInfo('●', ConsoleColor.DarkGray),
+            CharInfo = new TileInfo('●', ConsoleColor.DarkGray),
 
             Position = new Vector2(x, y),
             OnCollideAction = new Push()

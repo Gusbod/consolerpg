@@ -10,7 +10,7 @@ interface IWorldInteraction
 
 class World : IWorldInteraction
 {
-    public CharInfo[,] groundTiles = new CharInfo[0, 0];
+    public TileInfo[,] groundTiles = new TileInfo[0, 0];
     public int MapSize => groundTiles.GetLength(0);
     public WorldEntity Player { get; set; }
 
@@ -20,8 +20,8 @@ class World : IWorldInteraction
 
     public World(IWorldGenerator worldGenerator)
     {
-        worldGenerator.PopulateWorld(this);
         Player = worldGenerator.GetPlayer(this);
+        worldGenerator.PopulateWorld(this);
     }
 
     public void Update()
@@ -47,6 +47,8 @@ class World : IWorldInteraction
 
     public void AddEntity(WorldEntity entity)
     {
+        if (entityPositionMap.ContainsKey(entity.Position)) return;
+
         entityPositionMap[entity.Position] = entity;
         entities.Add(entity);
     }
@@ -58,14 +60,20 @@ class World : IWorldInteraction
         entityPositionMap[entity.Position] = entity;
     }
 
-    public CharInfo GetCharInfoAt(int x, int y)
+    public TileInfo GetTileInfoAt(int x, int y)
     {
         if (x < 0 || x >= MapSize || y < 0 || y >= MapSize)
         {
-            return new CharInfo(' ', ConsoleColor.Black); // Empty space
+            return new TileInfo(' ', ConsoleColor.Black); // Empty space
         }
 
-        Vector2 position = new Vector2(x, y);
+        Vector2 position = new(x, y);
+
+
+        if (Player.Position.X == x && Player.Position.Y == y)
+        {
+            return Player.CharInfo;
+        }
 
         if (entityPositionMap.TryGetValue(position, out WorldEntity? entity))
         {
@@ -83,9 +91,19 @@ class World : IWorldInteraction
         return entity;
     }
 
+    public bool CanMoveTo(int x, int y)
+    {
+        return CanMoveTo(new Vector2(x, y));
+    }
+
     public bool CanMoveTo(Vector2 vector2)
     {
         if (vector2.X < 0 || vector2.X >= MapSize || vector2.Y < 0 || vector2.Y >= MapSize)
+        {
+            return false;
+        }
+
+        if (GetTileInfoAt((int)vector2.X, (int)vector2.Y).IsBlocking)
         {
             return false;
         }

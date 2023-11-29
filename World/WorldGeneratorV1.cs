@@ -4,6 +4,7 @@ class WorldGeneratorV1 : IWorldGenerator
 {
     int mapSize;
     IEntityGenerator entityGenerator;
+    Random random = new Random();
 
     public WorldGeneratorV1(int _mapSize, IEntityGenerator entityGenerator)
     {
@@ -11,11 +12,23 @@ class WorldGeneratorV1 : IWorldGenerator
         mapSize = _mapSize;
     }
 
+    public WorldEntity GetPlayer(World world)
+    {
+        return entityGenerator.GetPlayer(mapSize / 2, mapSize / 2, world);
+    }
+
     public void PopulateWorld(World world)
     {
-        Random Random = new Random();
+        world.groundTiles = new TileInfo[mapSize, mapSize];
 
-        world.groundTiles = new CharInfo[mapSize, mapSize];
+        for (int x = 0; x < world.MapSize; x++)
+        {
+            for (int y = 0; y < world.MapSize; y++)
+            {
+                world.groundTiles[x, y] = GetNoiseBasedTile(x, y);
+                // world.groundTiles[x, y] = GetRandomGrassTile();
+            }
+        }
 
         int numberOfTreeClusters = mapSize / 2; // Number of tree clusters
         int clusterRadius = 10; // Radius around cluster center where trees are more likely
@@ -23,43 +36,39 @@ class WorldGeneratorV1 : IWorldGenerator
         List<Vector2> treeClusters = new List<Vector2>();
         for (int i = 0; i < numberOfTreeClusters; i++)
         {
-            treeClusters.Add(new Vector2(Random.Next(world.MapSize), Random.Next(world.MapSize)));
+            treeClusters.Add(new Vector2(random.Next(world.MapSize), random.Next(world.MapSize)));
         }
 
-        // CharInfo grass = new CharInfo('.', ConsoleColor.Green);
-        CharInfo grass = new CharInfo('·', ConsoleColor.DarkGreen);
         for (int x = 0; x < world.MapSize; x++)
         {
             for (int y = 0; y < world.MapSize; y++)
             {
-                world.groundTiles[x, y] = grass; //GetRandomGrassChar(Random);
-
-                if (Random.Next(0, 500) == 0)
+                if (random.Next(0, 500) == 0)
                 {
+                    if (!world.CanMoveTo(new Vector2(x, y))) continue;
+
                     world.AddEntity(entityGenerator.GetEnemy(x, y, world));
                 }
-                else if (Random.Next(0, 100) == 0)
+                else if (random.Next(0, 100) == 0)
                 {
-                    world.AddEntity(entityGenerator.GetRock(x, y, world));
-                }
-                else if (Random.Next(0, 25) == 0)
-                {
-                    // world.AddEntity(entityGenerator.GetTree(x, y, world));
-                    if (IsNearTreeCluster(x, y, treeClusters, clusterRadius, Random))
-                    {
+                    TileInfo tile = world.GetTileInfoAt(x, y);
+                    if (tile.Color == ConsoleColor.DarkGreen)
                         world.AddEntity(entityGenerator.GetTree(x, y, world));
+                }
+                else if (random.Next(0, 25) == 0)
+                {
+                    if (!world.CanMoveTo(new Vector2(x, y))) continue;
+
+                    if (IsNearTreeCluster(x, y, treeClusters, clusterRadius))
+                    {
+                        world.AddEntity(entityGenerator.GetRock(x, y, world));
                     }
                 }
             }
         }
     }
 
-    public WorldEntity GetPlayer(World world)
-    {
-        return entityGenerator.GetPlayer(mapSize / 2, mapSize / 2, world);
-    }
-
-    private bool IsNearTreeCluster(int x, int y, List<Vector2> treeClusters, int clusterRadius, Random random)
+    private bool IsNearTreeCluster(int x, int y, List<Vector2> treeClusters, int clusterRadius)
     {
         foreach (Vector2 cluster in treeClusters)
         {
@@ -72,15 +81,31 @@ class WorldGeneratorV1 : IWorldGenerator
         return false;
     }
 
-    private CharInfo GetRandomGrassChar(Random random)
+    private TileInfo GetNoiseBasedTile(int x, int y)
     {
-        char[] grassSymbols = new char[] { '.', ',' }; // Different grass symbols
-        ConsoleColor[] grassColors = new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.DarkGreen }; // Different grass colors
+        // Simple noise generation based on position
+        double noise = Math.Sin(x * 0.05) * Math.Cos(y * 0.15);
 
-        char symbol = grassSymbols[random.Next(grassSymbols.Length)];
+        if (noise > 0.6)
+            return new TileInfo('~', ConsoleColor.DarkBlue, true);
+        else if (noise > 0.5)
+            return new TileInfo('·', ConsoleColor.DarkYellow);
+        else
+            return GetRandomGrassTile();
+    }
+
+    private TileInfo GetRandomGrassTile()
+    {
+        ConsoleColor[] grassColors = new ConsoleColor[] { ConsoleColor.DarkGreen }; // Different grass colors
         ConsoleColor color = grassColors[random.Next(grassColors.Length)];
 
-        return new CharInfo(symbol, color);
+        return new TileInfo(GetRandomGrassChar(), color);
+    }
+
+    private char GetRandomGrassChar()
+    {
+        char[] grassSymbols = new char[] { '·', '.', ',' }; // Different grass symbols
+        return grassSymbols[random.Next(grassSymbols.Length)];
     }
 }
 
