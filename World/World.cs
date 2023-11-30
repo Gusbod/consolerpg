@@ -12,11 +12,14 @@ class World : IWorldInteraction
 {
     public Tile[,] groundTiles = new Tile[0, 0];
     public int MapSize => groundTiles.GetLength(0);
-    public WorldEntity Player { get; set; }
+    public WorldEntity Player { get; private set; }
+
+    public DateTime Time { get; private set; } = new(668, 1, 1, 12, 0, 0);
+    private const int TimeStep = 1;
+    private const int UpdateArea = 25;
 
     readonly List<WorldEntity> entities = new();
     readonly Dictionary<Vector2, WorldEntity> entityPositionMap = new();
-
 
     public World(IWorldGenerator worldGenerator)
     {
@@ -26,8 +29,11 @@ class World : IWorldInteraction
 
     public void Update()
     {
-        // Check a 50x50 area around the player and update all entities in that area
-        int area = 25;
+        Time = Time.AddMinutes(TimeStep);
+
+        // Check area around the player and update all entities in that area
+        // Is this optimazitaion needed?
+        int area = UpdateArea;
         int playerX = (int)Player.Position.X;
         int playerY = (int)Player.Position.Y;
 
@@ -87,12 +93,12 @@ class World : IWorldInteraction
 
         if (Player.Position.X == x && Player.Position.Y == y)
         {
-            return Player.CharInfo;
+            return Player.Tile;
         }
 
         if (entityPositionMap.TryGetValue(position, out WorldEntity? entity))
         {
-            return entity.CharInfo;
+            return entity.Tile;
         }
         else
         {
