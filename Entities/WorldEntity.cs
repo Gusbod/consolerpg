@@ -4,11 +4,7 @@ class WorldEntity
 {
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
-    public Tile CharInfo { get; set; }
-
-    public Vector2 Position { get; set; }
-    public float subPositionX = 0; //when -1 should move left, when 1 should move right
-    public float subPositionY = 0; //when -1 should move up, when 1 should move down
+    public Tile Tile { get; set; }
 
     public virtual bool IsBlocking { get; set; } = true; //True means other entities cant occupy the same space (which is buggy anyways..)
     public virtual bool IsVisible { get; set; } = true; //Used for traps and ghosts and stuff maybe?
@@ -20,6 +16,9 @@ class WorldEntity
     public IAction OnUpdateAction { get; set; } = new NoAction(); //What action will the entity perform on each update tick?
     public IAction MoveAction { get; set; } = new Move(); //What action will the entity perform when trying to move?
 
+    public Vector2 Position { get; set; }
+    public float subPositionX = 0; //when -1 should move left, when 1 should move right
+    public float subPositionY = 0; //when -1 should move up, when 1 should move down
     public int Weight { get; protected set; }
 
     private int health = 100;
@@ -81,9 +80,10 @@ class WorldEntity
     {
         Health = 0;
         IsBlocking = false;
-        CharInfo = new Tile('×', ConsoleColor.DarkRed);
+        Tile = new Tile('×', ConsoleColor.DarkRed);
         OnCollideAction = new NoAction();
         OnUpdateAction = new NoAction();
+        MoveAction = new NoAction();
     }
 
     public ActionResult Update()
