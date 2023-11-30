@@ -9,7 +9,7 @@ class WorldEntity
     public virtual bool IsBlocking { get; set; } = true; //True means other entities cant occupy the same space (which is buggy anyways..)
     public virtual bool IsVisible { get; set; } = true; //Used for traps and ghosts and stuff maybe?
 
-    protected IWorldInteraction world;
+    private IWorldInteraction world;
     public IWorldInteraction World => world;
 
     public IAction OnCollideAction { get; set; } = new Examine(); //What action will the entity perform if trying to move into the same space as another entity?
@@ -19,37 +19,34 @@ class WorldEntity
     public Vector2 Position { get; set; }
     public float subPositionX = 0; //when -1 should move left, when 1 should move right
     public float subPositionY = 0; //when -1 should move up, when 1 should move down
-    public int Weight { get; protected set; }
-
-    private int health = 100;
-    public int Health
-    {
-        get => health;
-        protected set
-        {
-            health = value;
-            Math.Clamp(health, 0, 100);
-        }
-    }
+    public int Weight { get; set; }
+    public int Size { get; set; } //How much space does this entity occupy in percent of a tile?
 
     private readonly Dictionary<string, int> attributes = new();
+    public readonly List<StatusEffect> StatusEffects = new();
     private readonly List<Thing> inventory = new();
 
     public WorldEntity(IWorldInteraction world)
     {
         this.world = world;
+        SetAttribute("weight", 1);
+        SetAttribute("size", 1);
+        SetAttribute("hitpoints", 1);
+    }
+
+    public ActionResult Update()
+    {
+        foreach (StatusEffect effect in StatusEffects)
+        {
+            effect.Apply(this);
+        }
+        return OnUpdateAction.Execute(this, Position);
     }
 
     public int GetAttribute(string name)
     {
-        if (attributes.ContainsKey(name.ToLower()))
-        {
-            return attributes[name.ToLower()];
-        }
-        else
-        {
-            return 0;
-        }
+        string lowerName = name.ToLower();
+        return attributes.ContainsKey(lowerName) ? attributes[lowerName] : 0;
     }
 
     public void SetAttribute(string name, int value)
@@ -69,16 +66,13 @@ class WorldEntity
 
     public void TakeDamage(int amount)
     {
-        Health -= amount;
-        if (Health <= 0)
-        {
-            Die();
-        }
+        int defense = GetAttribute("defense") + GetAttribute("sturdyness");
+        attributes["hitpoints"] -= amount - defense;
+        if (attributes["hitpoints"] <= 0) Die();
     }
 
     private void Die()
     {
-        Health = 0;
         IsBlocking = false;
         Tile = new Tile('×', ConsoleColor.DarkRed);
         OnCollideAction = new NoAction();
@@ -86,8 +80,43 @@ class WorldEntity
         MoveAction = new NoAction();
     }
 
-    public ActionResult Update()
+    public void AddStatusEffect(StatusEffect effect)
     {
-        return OnUpdateAction.Execute(this, Position);
+        StatusEffects.Add(effect);
     }
+
+    public void RemoveStatusEffect(StatusEffect effect)
+    {
+        StatusEffects.Remove(effect);
+    }
+}
+
+abstract class StatusEffect //fear, poison, pain, starvation, thirsting
+{
+    public string Name { get; set; } = "";
+    public int TicksSinceAdded { get; set; } = 0;
+
+    protected Action<WorldEntity> CalculateEffect = (entity) => { };
+    protected Func<bool> CheckIfEffectExpired = () => false;
+
+    public void Apply(WorldEntity entity)
+    {
+        TicksSinceAdded++;
+        CalculateEffect.Invoke(entity);
+        if (CheckIfEffectExpired.Invoke()) entity.RemoveStatusEffect(this);
+    }
+}
+
+class Poison : StatusEffect
+{
+    public int Duration { get; set; } = 10;
+    public int Strength { get; set; } = 1;
+
+    public Poison()
+    {
+        Name = "Poison";
+        CalculateEffect = (entity) => entity.TakeDamage(Strength);
+        CheckIfEffectExpired = () => TicksSinceAdded >= Duration;
+    }
+
 }

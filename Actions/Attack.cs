@@ -16,7 +16,7 @@ class Attack : IAction
         {
             int damagePotential = actor.GetAttribute("strength") * 10; //Calculate max possible damage made by actor
             targetEntity.TakeDamage(damagePotential);
-            return new ActionResult(true, $"{actor.Name} attack {targetEntity.Name}! {targetEntity.Health} HP left.");
+            return new ActionResult(true, $"{actor.Name} attack {targetEntity.Name}! {targetEntity.HitPoints} HP left.");
         }
 
         return new ActionResult(false, $"{actor.Name} miss {targetEntity.Name}!");

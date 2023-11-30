@@ -1,21 +1,20 @@
 using System.Numerics;
+using System.Xml.Serialization;
 
 class EntityGeneratorV1 : IEntityGenerator
 {
+    Random random = new();
+
     public WorldEntity GetPlayer(int x, int y, IWorldInteraction world)
     {
         WorldEntity entity = new WorldEntity(world)
         {
             Name = "Alf",
-            // CharInfo = new CharInfo('@', ConsoleColor.White),
             Tile = new Tile('☻', ConsoleColor.Yellow),
-
             Position = new Vector2(x, y),
         };
-
-        entity.SetAttribute("Strength", 3);
-        entity.SetAttribute("Dexterity", 2);
-        entity.SetAttribute("Protection", 1);
+        SetCommonAttributes(entity, 100, 5);
+        SetLivingAttributes(entity, 50, 50, 50);
 
         return entity;
     }
@@ -25,18 +24,13 @@ class EntityGeneratorV1 : IEntityGenerator
         WorldEntity entity = new WorldEntity(world)
         {
             Name = "Bandit",
-            // CharInfo = new CharInfo('B', ConsoleColor.Red),
-            // CharInfo = new CharInfo('☻', ConsoleColor.Red),
-            Tile = new Tile('☺', ConsoleColor.Red),
-            // CharInfo = new CharInfo('☻', ConsoleColor.Red),
-
+            Tile = new Tile('☺', ConsoleColor.Red), //B☻☺
             Position = new Vector2(x, y),
             OnCollideAction = new Attack(),
             OnUpdateAction = new LookForTarget()
         };
-        entity.SetAttribute("Strength", 1);
-        entity.SetAttribute("Dexterity", 1);
-        entity.SetAttribute("Protection", 1);
+        SetCommonAttributes(entity, random.Next(30, 81), random.Next(10, 61));
+        SetLivingAttributes(entity, random.Next(10, 61), random.Next(10, 61), random.Next(10, 61));
 
         return entity;
     }
@@ -46,12 +40,10 @@ class EntityGeneratorV1 : IEntityGenerator
         WorldEntity entity = new(world)
         {
             Name = "Tree",
-            // CharInfo = new CharInfo('↑', ConsoleColor.Green),
-            // CharInfo = new CharInfo('♣', ConsoleColor.Green),
-            // CharInfo = new CharInfo('♠', ConsoleColor.Green),
-            Tile = new Tile('↟', ConsoleColor.Green),
+            Tile = new Tile('↟', ConsoleColor.Green), //↑♣♠♦♥↥⇞↠
             Position = new Vector2(x, y)
         };
+        SetCommonAttributes(entity, 1000, 75);
 
         return entity;
     }
@@ -61,16 +53,27 @@ class EntityGeneratorV1 : IEntityGenerator
         WorldEntity entity = new(world)
         {
             Name = "Rock",
-            // CharInfo = new CharInfo('o', ConsoleColor.DarkGray),
-            // CharInfo = new CharInfo('O', ConsoleColor.DarkGray),
-            // CharInfo = new CharInfo('○', ConsoleColor.DarkGray),
-            Tile = new Tile('●', ConsoleColor.DarkGray),
-
+            Tile = new Tile('●', ConsoleColor.DarkGray), //oO○●
             Position = new Vector2(x, y),
             OnCollideAction = new Push()
         };
+        SetCommonAttributes(entity, 500, 90);
 
         return entity;
+    }
+
+    private void SetCommonAttributes(WorldEntity entity, int hitpoints, int sturdyness)
+    {
+        entity.SetAttribute("hitpoints", hitpoints);
+        entity.SetAttribute("sturdyness", 1);
+    }
+
+    private void SetLivingAttributes(WorldEntity entity, int perception, int stamina, int dexterity)
+    {
+        entity.SetAttribute("perception", perception);
+        entity.SetAttribute("stamina", stamina);
+        entity.SetAttribute("dexterity", dexterity);
+        //hunger, thirst, wakeness, bravery, hearing, sight
     }
 }
 

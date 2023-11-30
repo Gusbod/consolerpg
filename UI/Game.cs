@@ -166,7 +166,7 @@ class Game
             $"Time: {world.Time.ToShortTimeString()}",
             "-----------",
             $"{world.Player.Name}",
-            $"HP: {world.Player.Health}",
+            $"HP: {world.Player.HitPoints}",
             $"Str: {world.Player.GetAttribute("Strength")}",
             //inventory and so on and so forth
         };
